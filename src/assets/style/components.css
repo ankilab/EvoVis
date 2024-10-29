@@ -1,0 +1,47 @@
+/* METRIC BUTTONS */
+.metric-btn:hover {
+    background-color: var(--accent-color);
+}
+
+.metric-btn {
+    height: 50px;
+    width: 50px;
+    background-color: var(--background-color);
+    padding: 0;
+    margin: 4px;
+    cursor: pointer;
+    border: none;
+    border-width: 3px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+/* FEEDBACK */
+.feedback {
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    margin: 10px
+}
+
+.feedback-warning {
+    border: 2px solid #B70202;
+    background: rgba(183, 2, 2, 0.15);
+    color: #B70202;
+}
+
+.feedback-information {
+    border: 2px solid #0C2CFF;
+    background: rgba(126, 143, 255, 0.30);
+    color: #0C2CFF;
+}
+
+.feedback-text {
+    margin: 5px;
+}
+
+/* PLOTS */
+.main-svg{
+    border-radius: 15px; 
+    box-shadow: var(--shadow);
+}

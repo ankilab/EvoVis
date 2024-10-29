@@ -1,0 +1,25 @@
+body {
+    font-family: var(--font-family);
+    color: #262626;
+}
+
+h1 {
+    font-size: 55px;
+    line-height: 60px;
+    margin: 0;
+}
+
+.input-heading {
+    margin: 5px; 
+    margin-top: 20px; 
+    font-weight: 400; 
+    font-size: 15px; 
+    white-space: nowrap;
+}
+
+.dot-heading {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; 
+    flex: 100%;
+}

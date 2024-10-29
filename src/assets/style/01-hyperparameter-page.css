@@ -1,0 +1,19 @@
+.metrics {
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+    align-items: center;
+}
+
+.hyperparameters-header{
+    justify-content: center;
+    display: grid;
+    align-content: start;    
+}
+
+#evolution-cover {
+    max-width: 325px;
+    max-height: 100%;
+    margin-top: 30px;
+}

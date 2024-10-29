@@ -1,0 +1,223 @@
+{
+    "hyperparameters": {
+        "num_generations": {
+            "value": 20,
+            "unit": null,
+            "icon": "iconoir:tree",
+            "displayname": "Generations",
+            "group": "ENAS parameters",
+            "description": "The total iterations or evolutionary cycles through which the algorithm refines neural architectures.",
+            "display": true
+        },
+        "population_size": {
+            "value": 20,
+            "unit": null,
+            "icon": "pepicons-pencil:people",
+            "displayname": "Population",
+            "group": "ENAS parameters",
+            "description": "The quantity of neural network models concurrently evaluated and evolved within each generation.",
+            "display": true
+        },
+        "nb_best_models_crossover": {
+            "value": 4,
+            "unit": null,
+            "icon": "game-icons:podium-winner",
+            "displayname": "Best models crossover",
+            "group": "ENAS parameters",
+            "description": "The count of top-performing models selected for genetic crossover to generate new offspring.",
+            "display": true
+        },
+        "mutation_rate": {
+            "value": 20,
+            "unit": null,
+            "icon": "ph:virus",
+            "displayname": "Mutation rate",
+            "group": "ENAS parameters",
+            "description": "The probability that a given model will be mutated during the evolutionary process.",
+            "display": true
+        },
+        "max_num_feature_layers": {
+            "value": 18,
+            "unit": null,
+            "icon": "cil:search",
+            "displayname": "Max feature layers",
+            "group": "ENAS parameters",
+            "description": "The maximum number of layers before GAP, GMP, or Flatten.",
+            "display": true
+        },
+        "max_num_classification_layers": {
+            "value": 1,
+            "unit": null,
+            "icon": "ph:tag",
+            "displayname": "Max classification layers",
+            "group": "ENAS parameters",
+            "description": "The maximum number of layers after GAP, GMP, or Flatten.",
+            "display": true
+        },
+        "path_gene_pool": {
+            "value": "genetic_algorithm/src/random_structure/gene_pool.txt",
+            "unit": null,
+            "icon": "ph:path-bold",
+            "displayname": "Path gene pool",
+            "group": "Filepath parameters",
+            "description": "The path to the gene pool file.",
+            "display": false
+        },
+        "path_rule_set": {
+            "value": "genetic_algorithm/src/random_structure/rule_set.txt",
+            "unit": null,
+            "icon": "ph:path-bold",
+            "displayname": "Path rule set",
+            "group": "Filepath parameters",
+            "description": "The path to the rule set file.",
+            "display": false
+        },
+        "dataset": {
+            "value": "cifar10",
+            "unit": null,
+            "icon": "material-symbols:dataset-outline",
+            "displayname": "Dataset",
+            "group": "Training parameters",
+            "description": "The name of the dataset.",
+            "display": true
+        },
+        "sample_rate": {
+            "value": 16000,
+            "unit": "Hz",
+            "icon": "uil:heart-rate",
+            "displayname": "Sample rate",
+            "group": "Training parameters",
+            "description": "The number of samples taken per second in the chosen dataset.",
+            "display": true
+        },
+        "input_shape": {
+            "value": [32, 32, 3],
+            "unit": null,
+            "icon": "uil:square-shape",
+            "displayname": "Input shape",
+            "group": "Training parameters",
+            "description": "Dimensions of the input data that is fed into the models.",
+            "display": true
+        },
+        "classes_filter": {
+            "value": [],
+            "unit": null,
+            "icon": "bi:collection-play",
+            "displayname": "Classes filter",
+            "group": "Training parameters",
+            "description": "The classes to be used for training and testing.",
+            "display": true
+        },
+        "nb_classes": {
+            "value": 10,
+            "unit": null,
+            "icon": "octicon:number-24",
+            "displayname": "Number of classes",
+            "group": "Training parameters",
+            "description": "The number of classes in the dataset.",
+            "display": true
+        },
+        "nb_epochs": {
+            "value": 12,
+            "unit": null,
+            "icon": "akar-icons:arrow-cycle",
+            "displayname": "Number of epochs",
+            "group": "Training parameters",
+            "description": "Number of complete iterations through the entire training dataset during the model training process",
+            "display": true
+        },
+        "min_free_space_gpu": {
+            "value": 5000000000,
+            "unit": "B",
+            "icon": "mdi:gpu",
+            "displayname": "Min free space GPU",
+            "group": "Training parameters",
+            "description": "The minimum free space on the GPU before starting training of a new model.",
+            "display": false
+        },
+        "max_memory_footprint": {
+            "value": 15000000,
+            "unit": "B",
+            "icon": "fluent:memory-16-regular",
+            "displayname": "Max memory footprint",
+            "group": "Fitness parameters",
+            "description": "The maximum memory footprint of the model.",
+            "display": false
+        },
+        "max_inference_time": {
+            "value": 3,
+            "unit": "ms",
+            "icon": "mingcute:time-line",
+            "displayname": "Max inference time",
+            "group": "Fitness parameters",
+            "description": "The maximum inference time of the model.",
+            "display": false
+        },
+        "n_populations": {
+            "value": 1,
+            "unit": null,
+            "icon": "clarity:group-line",
+            "displayname": "Number of populations",
+            "group": "ENAS parameters",
+            "description": "The number of populations used.",
+            "display": false
+        },
+        "exploration_step": {
+            "value": 0.0, 
+            "unit": null,
+            "icon": "carbon:explore",
+            "displayname": "Exploration Step",
+            "group": "ENAS parameters",
+            "description": "Magnitude of exploration during the optimization process",
+            "display": false
+        },
+        "random_seed": {
+            "value": 1,
+            "unit": null,
+            "icon": "game-icons:perspective-dice-six-faces-random",
+            "displayname": "Random seed",
+            "group": "ENAS parameters",
+            "description": "Specifies the random seed used to ensure reproducibility by starting with the same initial state for randomization.",
+            "display": false
+        }
+    },
+    "results": {
+        "memory_footprint_h5": {     
+            "displayname": "Memory Footprint H5",              
+			"unit": "B",        
+            "run-result-plot": true,
+            "individual-info-plot": true,
+            "pareto-optimlity-plot": true,
+            "individual-info-img": "chip-icon.png"     
+            
+        },
+        "inference_time": {
+            "displayname": "Inference Time",              
+			"unit": "ms",        
+            "run-result-plot": true,
+            "individual-info-plot": true,
+            "pareto-optimlity-plot": true,
+            "individual-info-img": "time-icon.png"     
+        },
+        "val_acc": {
+            "displayname": "Accuracy",              
+			"unit": null,        
+            "run-result-plot": false,
+            "individual-info-plot": true,
+            "pareto-optimlity-plot": true,
+            "individual-info-img": "correct-icon.png",      
+            "min-boundary": 0,
+            "max-boundary": 1
+        },
+        "fitness": {
+            "displayname": "Fitness",              
+			"unit": null,        
+            "run-result-plot": false,
+            "individual-info-plot": false,
+            "pareto-optimlity-plot": false,
+            "individual-info-img": null,      
+            "min-boundary": 0,
+            "max-boundary": 1
+        }
+    }
+}

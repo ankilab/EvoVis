@@ -1,0 +1,5 @@
+data
+.env
+src/archive
+*pycache*
+*.DC_Store*

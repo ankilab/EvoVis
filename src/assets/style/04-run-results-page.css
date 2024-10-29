@@ -1,0 +1,50 @@
+.dot-heading-results-page{
+    margin: 10px;
+}
+
+.col-results-page{
+    max-width: 100%;
+    flex: 1;
+}
+
+.general-overview{
+    margin: 5px;
+    padding: 20px;
+    background-color: #E8E8E8;
+    border-radius: 20px;
+}
+
+.best-individual{
+    background-color: #E8E8E8;
+    border-radius: 20px;
+    display: grid;
+    justify-items: center;
+}
+
+.mantine-Chip-iconWrapper{
+    color: #FFFFFF;
+}
+
+.mantine-Chip-label{
+    color: #FFFFFF;
+}
+
+.mantine-1t9l140[data-checked][data-variant="filled"]{
+    background-color: #6173E9;
+}
+
+.mantine-1t9l140[data-variant="filled"] {
+    background-color: #ACB5ED;
+}
+
+.mantine-1t9l140[data-variant="filled"]:hover {
+    background-color: #ACB5ED;
+}
+
+.mantine-Chip-input{
+    color: #E8E8E8;
+}
+
+.mantine-Chip-root{
+    color: #E8E8E8;
+}

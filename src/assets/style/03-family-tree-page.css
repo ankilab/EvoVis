@@ -1,0 +1,166 @@
+/* CYTOSCAPE */
+.cytoscape-values{
+    margin: 20px;
+    padding: 20px;
+    background-color: #E8E8E8;
+    border-radius: 20px;
+}
+
+#cytoscape-family-tree {
+    background: radial-gradient(45% 45% at 50% 50%, rgba(97, 115, 233, 0.5) 0%, rgba(255, 255, 255, 0.00) 100%);
+}
+
+/* GENE BADGE */
+.mantine-Badge-root {
+    margin: 5px;
+    background: #D2D5EE;
+    color: #6173E9;
+}
+
+/* SLIDER COMPONENT */
+#gen-range-slider {
+    padding: 0px 0px 0px;
+}
+
+.rc-slider-track {
+    background-color: var(--accent-color);
+    height: 6px;
+}
+
+.rc-slider-handle-1 {
+    border-color: var(--accent-color);
+    background-color: var(--accent-color);
+}
+
+.rc-slider-handle-2 {
+    border-color: var(--accent-color);
+    background-color: #FFFFFF;
+}
+
+.rc-slider-handle-3 {
+    border-color: var(--accent-color);
+    background-color: var(--accent-color);
+}
+
+.rc-slider-rail {
+    background-color: #FFFFFF;
+    height: 6px;
+    border-radius: 6px;
+}
+
+.rc-slider-handle:focus {
+    border-color: var(--accent-color);
+}
+
+.rc-slider-handle:hover {
+    border-color: var(--accent-color);
+}
+
+.rc-slider-handle-dragging.rc-slider-handle-dragging.rc-slider-handle-dragging {
+    border-color: var(--accent-color);
+    box-shadow: 0px 0px 5px 5px rgba(102, 116, 226, 0.7);
+}
+
+.rc-slider-dot.rc-slider-dot-active {
+    border-color: var(--accent-color);
+}
+
+.rc-slider-mark-text {
+    color: #000000;
+    font-family: var(--font-family);
+    font-size: 10px;
+}
+
+/* CIRCLE BUTTONS */
+.circle-btn {
+    height: 50px;
+    width: 50px;
+    background-color: var(--background-color); /* Blue background */
+    padding-block: 0px;
+    padding-inline: 0px;
+    padding: 0;
+    margin: 4px;
+    cursor: pointer; /* Mouse pointer on hover */
+    border: solid; 
+    border-color: #FFFFFF;
+    border-width: 3px;
+    border-radius: 50%; 
+    text-align: center;
+}
+
+.circle-btn:hover {
+    background-color: var(--accent-color);
+}
+
+/* CIRCLE SELECT */
+.circle-select-nav{
+    display: inline-block;
+    vertical-align: middle;
+    margin:4px;
+    position: absolute;
+    top: 15px;
+}
+  
+.mantine-Select-input{
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    border-radius: 50px; 
+    min-height: 50px;
+    min-width: 200px;
+    border: 3px solid #FFFFFF;
+    display: inline-block;
+}
+
+.mantine-Select-input:focus{ /* Type without icon */
+    border-color: var(--accent-color);
+}
+
+.mantine-Input-withIcon:focus{ /* Type with icon */
+    border-color: var(--accent-color);
+}
+
+.mantine-Select-dropdown{
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    border-radius: 20px; 
+    min-height: 50px;
+    border: 3px solid #FFFFFF;
+    display: inline-block;
+}
+
+.mantine-12zgr9[data-selected] {
+    font-family: var(--font-family);
+    background-color: var(--accent-color);
+    border-radius: 15px;
+}
+
+/* LABEL VISIBILITIES */
+label[for="run-select"] {
+    height: 0px;
+    display: none;
+}
+
+label[for="gen-select"] {
+    height: 0px;
+    display: none;
+}
+
+label[for="ind-select"] {
+    height: 0px;
+    display: none;
+}
+
+/* LAYOUT */
+#individual-genes {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: left;
+}
+
+#individual-results{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}

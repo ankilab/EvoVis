@@ -1,0 +1,1 @@
+[{"layer": "Rescaling", "f_name": "Rescaling", "scale": 0.00392156862745098}, {"layer": "C_2D", "f_name": "Conv2D", "filters": 16, "kernel_size": 1, "strides": 2, "padding": "same"}, {"layer": "MP_2D", "f_name": "MaxPooling2D", "pool_size": 3, "padding": "same"}, {"layer": "GAP_2D", "f_name": "GlobalAveragePooling2D()"}, {"layer": "DO", "f_name": "Dropout", "rate": 0.0}]

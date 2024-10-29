@@ -1,0 +1,7 @@
+{
+    "memory_footprint_h5": 4601320,
+    "val_acc": 0.8942000269889832,
+    "inference_time": 0.2244396209716797,
+    "fitness": 0.8942000269889832,
+    "error": false
+}

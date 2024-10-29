@@ -1,0 +1,30 @@
+/* APP BACKGROUND */
+body {
+    background-color:var(--background-color);
+    padding: 1rem 1rem;
+    margin: 0;
+}
+
+/* APP CONTENT */
+#page-content {
+    background-color: var(--background-color);
+    padding: 1rem 1rem;
+    margin: 0;   
+}
+
+/* NAVIGATION */
+#navbar {
+    display: flex;
+    justify-content: space-between; /* Aligns the left and right divs at opposite ends */
+    align-items: center; /* Vertically center the divs within the container */
+}
+
+#navrun {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#navlinks {
+    display: inline-block;
+    vertical-align: middle;
+}
