@@ -74,17 +74,17 @@ The generation subdirectories store each individual of the generation along with
 In addition to the collection of generations, a configuration file containing the hyperparameters, a crossover log, and the search space configuration specifying the gene pool directed acyclic graph (DAG) is stored in the run directory.  
 A more detailed description of the folder and file structure as well as a sample dataset is provided in the documentation of EvoVis.  
 
-![Run Results File Structure](figures/run-results-file-structure.png)
+![Run Results File Structure](./src/assets/media/run-results-file-structure.png)
 
 ## Hyperparameter Overview
 
-The default view of EvoVis is the `Hyperparameters` page ![Hyperparameter Page](figures/hyperparameter-page.png), which enables users to understand the configurations of an ENAS run and provides clarity on the inputs that influence the evolutionary trajectory from the beginning.  
+The default view of EvoVis is the `Hyperparameters` page ![Hyperparameter Page](./src/assets/media/hyperparameter-page.png), which enables users to understand the configurations of an ENAS run and provides clarity on the inputs that influence the evolutionary trajectory from the beginning.  
 Users can access additional descriptions by hovering over the hyperparameter component icons, revealing tooltips that clarify the purpose of each hyperparameter.  
 This comprehensive experiment logging enhances reproducibility, thereby increasing the reliability of research results [@ml-reproducability].  
 
 ## Gene Pool Graph
 
-The `Gene Pool` page ![Gene Pool Page](figures/genepool-page.png) generates a graph representing potential neural architectures that form each individual and thus each population of an ENAS run.  
+The `Gene Pool` page ![Gene Pool Page](./src/assets/media/genepool-page.png) generates a graph representing potential neural architectures that form each individual and thus each population of an ENAS run. 
 Each chromosome is derived from this gene pool, resulting in a wide variety of neural architectures.  
 This feature serves both as an analytical support and as an experiment log of ENAS experiments [@ml-reproducability].  
 It not only captures the logic of the search space but also presents it in a comprehensive graph format.  
@@ -92,13 +92,13 @@ This automated visualization of the DAG reduces the time spent manually identify
 
 ## Family Tree Graph
 
-Another component of EvoVis is a family tree ![Family Tree Page](figures/family-tree-page.png), which illustrates the relationships between different architectures, allowing users to quickly identify the ancestors of each architecture.  
+Another component of EvoVis is a family tree ![Family Tree Page](./src/assets/media/family-tree-page.png), which illustrates the relationships between different architectures, allowing users to quickly identify the ancestors of each architecture.  
 By navigating through the family tree, users can access performance metrics and chromosomes for each architecture.  
 This feature facilitates tracing the lineage of successful architectures and helps diagnose training problems by enabling fine-grained analysis of the evolutionary process.  
 
 ## Run Results Plots
 
-Arguably the most important page in EvoVis is the `Run Results` page ![Run Results Page](figures/run-results-page.png), which provides an aggregated analysis of an ENAS run.  
+Arguably the most important page in EvoVis is the `Run Results` page ![Run Results Page](./src/assets/media/run-results-page.png), which provides an aggregated analysis of an ENAS run.  
 This page features a variety of plots, including performance metrics across generations, fitness values and accuracies as well as metrics like power consumption and memory usage.  
 For multi-objective problems, a graph illustrating the trade-off between competing objectives in the fitness function is presented so that users can identify optimal solutions.  
 Additionally, the run results include the best individuals of each generation, along with their corresponding architectures and performance evaluations.  
