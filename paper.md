@@ -6,18 +6,14 @@ tags:
   - neural architecture search algorithm
   - optimization algorithm
   - deep learning
-
-  \author{Lea Dang, René Groh, Andreas M. Kist\\Friedrich-Alexander-Universität Erlangen-Nürnberg, Germany}
 authors:
   - name: Lea Dang
     corresponding: true
     orcid: 0009-0005-6056-0725
     affiliation: 1 
   - name: René Groh
-    orcid:
     affiliation: 1
   - name: Andreas M. Kist
-    orcid:
     affiliation: 1
 affiliations:
  - name: Friedrich-Alexander-Universität Erlangen-Nürnberg, Germany
