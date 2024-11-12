@@ -44,10 +44,12 @@ They lack the expertise and depth of exploration required to tackle complex appl
 This limitation has spurred the rise of automated approaches for discovering neural architectures, known as Neural Architecture Search (NAS) algorithms [@NAS-review-efficient-performance-prediction].  
 The use of NAS not only reduces the manual effort required, but also enables a more efficient exploration of the architectural search space, which in turn leads to the generation of superior models for specialized tasks.  
 
-Beside others (reinforcement learning [@NAS-reinforcement-learning], Bayesian optimization [@NAS-BANANAS]), Evolutionary Neural Architecture Search (ENAS), as depicted in ![Evolutionary neural architecture search overview](figures/enas-flowchart.png), is one NAS optimization method which mimics biological evolution relying on the principle of survival of the fittest.  
+Beside others (reinforcement learning [@NAS-reinforcement-learning], Bayesian optimization [@NAS-BANANAS]), Evolutionary Neural Architecture Search (ENAS) is one NAS optimization method which mimics biological evolution relying on the principle of survival of the fittest.  
 Initially, the algorithm selects a starting population from the given gene pool (search space).  
 In each generation, including the initial one, every individual in the population is evaluated to determine its fitness.  
 The processes of selection, crossover (combining the structure of high-performing architectures), and mutation (introducing random structural changes) are then applied to progressively enhance the objective value (fitness) over time until a stopping criterion is fulfilled [@EvoNAS-survey].  
+
+![Evolutionary neural architecture search overview](./src/assets/media/enas-flowchart.png)
 
 ENAS algorithms have demonstrated remarkable success in generating state-of-the-art neural architectures [@EvoNAS-regularized-evolution-img-classifier, @EvoNAS-large-scale-evolution-img-classifier, @EvoNAS-CNN-design, @EvoNAS-NSGA-Net-multi-obj].  
 However, understanding their behavior and interpreting the results poses significant challenges.  
