@@ -2,18 +2,20 @@
 title: 'EvoVis: Dashboard for Visualizing Evolutionary Neural Architecture Search Algorithms'
 tags:
   - Python
-  - evolutionary neural architecture search algorithm
-  - neural architecture search algorithm
-  - optimization algorithm
-  - deep learning
+  - Evolutionary neural architecture search algorithm
+  - Neural architecture search algorithm
+  - Optimization algorithm
+  - Deep learning
 authors:
   - name: Lea Dang
     corresponding: true
     orcid: 0009-0005-6056-0725
     affiliation: 1
   - name: René Groh
+    orcid: 0000-0002-3405-1311
     affiliation: 1
   - name: Andreas M. Kist
+    orcid: 0000-0003-3643-7776
     affiliation: 1
 affiliations:
   - name: Friedrich-Alexander-Universität Erlangen-Nürnberg, Germany
