@@ -10,10 +10,10 @@ import json
 
 # MODULE EVOLUTION
 
-# The Evolution Module provides functionalities 
+# The Evolution Module provides functionalities
 # for generating the family tree cytoscape,
-# for processing information about individuals, 
-# and for providing run configurations. 
+# for processing information about individuals,
+# and for providing run configurations.
 
 ##################################################
 
@@ -37,7 +37,7 @@ def _json_to_dict(filepath):
     >>> data = _json_to_dict('example.json')
     """
     try:
-        with open(filepath, 'r') as file:
+        with open(filepath, "r") as file:
             data = json.load(file)
         return data
     except FileNotFoundError:
@@ -57,7 +57,8 @@ def _get_configurations(run):
     Returns:
         dict: A dictionary containing the configurations retrieved from the specified run.
     """
-    return _json_to_dict(f'{run}/config.json')
+    return _json_to_dict(f"{run}/config.json")
+
 
 def get_hyperparameters(run):
     """
@@ -72,6 +73,7 @@ def get_hyperparameters(run):
     configs = _get_configurations(run)
     return configs["hyperparameters"]
 
+
 def get_meas_info(run):
     """
     Retrieve measurement information from the specified run.
@@ -84,17 +86,20 @@ def get_meas_info(run):
     """
     configs = _get_configurations(run)
     results = configs["results"]
-    
+
     for result, setting in results.items():
-        setting["displayname"] = setting.get("displayname", result) 
-        setting["unit"] = setting.get("unit", None) 
-        setting["run-result-plot"] = setting.get("run-result-plot", True) 
-        setting["individual-info-plot"] = setting.get("individual-info-plot", True) 
-        setting["pareto-optimlity-plot"] = setting.get("pareto-optimlity-plot", False) 
-        setting["individual-info-img"] = setting.get("individual-info-img", "measure1-icon.png") or "measure1-icon.png"
-        setting["min-boundary"] = setting.get("min-boundary", None) 
-        setting["max-boundary"] = setting.get("max-boundary", None) 
-    
+        setting["displayname"] = setting.get("displayname", result)
+        setting["unit"] = setting.get("unit", None)
+        setting["run-result-plot"] = setting.get("run-result-plot", True)
+        setting["individual-info-plot"] = setting.get("individual-info-plot", True)
+        setting["pareto-optimlity-plot"] = setting.get("pareto-optimlity-plot", False)
+        setting["individual-info-img"] = (
+            setting.get("individual-info-img", "measure1-icon.png")
+            or "measure1-icon.png"
+        )
+        setting["min-boundary"] = setting.get("min-boundary", None)
+        setting["max-boundary"] = setting.get("max-boundary", None)
+
     return configs["results"]
 
 
@@ -133,22 +138,26 @@ def get_generations(run, as_int=False):
     # Retrieve generation names and numbers
     generation_path = run
     items = os.listdir(generation_path)
-    generations = [item for item in items if os.path.isdir(os.path.join(generation_path, item))]
+    generations = [
+        item for item in items if os.path.isdir(os.path.join(generation_path, item))
+    ]
     generations_int = [int(gen.split("_")[1]) for gen in generations]
 
     generations_int.sort()
-    
+
     # Check last generation finished processed
     take_last_gen = True
-    results_last_gen = _get_individuals_of_generation(run, generations_int[-1], "results")
-    
+    results_last_gen = _get_individuals_of_generation(
+        run, generations_int[-1], "results"
+    )
+
     for result in results_last_gen.values():
         if result.get("fitness", None) is None:
             take_last_gen = False
-            
+
     if not take_last_gen:
-        generations_int = generations_int[0:len(generations_int)-1]
-        
+        generations_int = generations_int[0 : len(generations_int) - 1]
+
     if not as_int:
         return [f"Generation_{gen}" for gen in generations_int]
     else:
@@ -174,7 +183,7 @@ def get_individual_result(run, generation, individual):
 
     """
     # Construct the file path
-    path = f'{run}/Generation_{generation}/{individual}/results.json'
+    path = f"{run}/Generation_{generation}/{individual}/results.json"
 
     # Check if the file exists
     if os.path.isfile(path):
@@ -185,7 +194,11 @@ def get_individual_result(run, generation, individual):
             # Process nested dictionaries
             for key, val in results.items():
                 if isinstance(val, dict):
-                    numeric_values = [value for value in val.values() if isinstance(value, (int, float))]
+                    numeric_values = [
+                        value
+                        for value in val.values()
+                        if isinstance(value, (int, float))
+                    ]
 
                     if numeric_values:
                         # Calculate the average of numeric values
@@ -195,13 +208,14 @@ def get_individual_result(run, generation, individual):
             return results
 
         except Exception as e:
-            
+
             return {"error": str(e)}
 
     else:
         # File not found, return None
         return None
-    
+
+
 def get_individual_chromosome(run, generation, individual):
     """
     Retrieve individual's genes/layers from a JSON file representing the chromosome.
@@ -220,7 +234,7 @@ def get_individual_chromosome(run, generation, individual):
 
     """
     # Construct the file path
-    path = f'{run}/Generation_{generation}/{individual}/chromosome.json'
+    path = f"{run}/Generation_{generation}/{individual}/chromosome.json"
 
     # Check if the file exists
     if os.path.isfile(path):
@@ -236,20 +250,20 @@ def get_individual_chromosome(run, generation, individual):
         # File not found, return None
         return None
 
-    
+
 ### INDIVIDUALS INFORMATION ###
 def _get_individuals_of_generation(run, generation, value="names"):
     """
     Get the data of all individuals of a specified generation.
-    
+
     Args:
         run (str): The path of the ENAS run results directory.
         generation (int): The generation number.
         value (str): The data of an individual that will be accessed. Available are "names", "results" or "chromosome".
-    
+
     Returns:
         individuals_names (list) or individual_dict (dict): Get the list of names if value is set to name or a dictionary with individual names as keys.
-        
+
     Raises:
         ValueError: If value is not one of the allowed values ("names", "results", "chromosome").
 
@@ -257,46 +271,57 @@ def _get_individuals_of_generation(run, generation, value="names"):
         >>> names = _get_individuals_of_generation('my_run', 3, 'names')
         >>> results_dict = _get_individuals_of_generation('my_run', 3, 'results')
     """
-    
+
     # Validate input values
     available_values = ["names", "results", "chromosome"]
-    
+
     if value not in available_values:
         raise ValueError(f"Invalid value. Allowed values are {available_values}.")
 
     # Access individuals names
     items = os.listdir(f"{run}/Generation_{generation}")
-    individuals_names = [item for item in items if os.path.isdir(os.path.join(f"{run}/Generation_{generation}", item))]
+    individuals_names = [
+        item
+        for item in items
+        if os.path.isdir(os.path.join(f"{run}/Generation_{generation}", item))
+    ]
 
     if value == "names":
         individuals_names.sort()
         return individuals_names
-    
+
     # Access individuals data
     individual_dict = {}
 
     for individual in individuals_names:
 
         if value == "results":
-            individual_dict[individual] = get_individual_result(run, generation, individual)
-        
+            individual_dict[individual] = get_individual_result(
+                run, generation, individual
+            )
+
         elif value == "chromosome":
-            individual_dict[individual] = get_individual_chromosome(run, generation, individual)
-    
+            individual_dict[individual] = get_individual_chromosome(
+                run, generation, individual
+            )
+
     return individual_dict
 
-def get_individuals(run, generation_range=None, value="names", as_generation_dict=False):
+
+def get_individuals(
+    run, generation_range=None, value="names", as_generation_dict=False
+):
     """
-    Get data from the individuals of a generation range or all the generations. 
-    
-    Args: 
+    Get data from the individuals of a generation range or all the generations.
+
+    Args:
         run (str): The path of the ENAS run results directory.
-        generation_range (range): A python range of generations from which the individuals will be extracted. 
+        generation_range (range): A python range of generations from which the individuals will be extracted.
         value (str): The return values of the individuals. Choose between the values "names", "results" or "chromosome".
         as_generation_dict (bool): Specify if individuals values should be returned as generation and individual name dictionairies.
-        
+
     Returns:
-        generations (dict) or individuals (list): Outputs a dict with generation key (in int) containing dict with individual key or a list only with the values (no generation, individual name specifications). 
+        generations (dict) or individuals (list): Outputs a dict with generation key (in int) containing dict with individual key or a list only with the values (no generation, individual name specifications).
 
     Raises:
         ValueError: If the specified generation range is not a valid range.
@@ -306,39 +331,50 @@ def get_individuals(run, generation_range=None, value="names", as_generation_dic
         >>> generations_dict = get_individuals('my_run', range(1, 5), 'results', as_generation_dict=True)
         >>> individuals_list = get_individuals('my_run', generation_range=range(1, 5), value='names')
     """
-    
+
     # Validate input values
     available_values = ["names", "results", "chromosome"]
     if value not in available_values:
         raise ValueError(f"Invalid value. Allowed values are {available_values}.")
-    
+
     # Generation range creation in case of None
     all_generations = get_generations(run)
-    generation_range = range(1, len(all_generations) + 1) if generation_range is None else generation_range
-    
+    generation_range = (
+        range(1, len(all_generations) + 1)
+        if generation_range is None
+        else generation_range
+    )
+
     # Validate generation_range
     if not isinstance(generation_range, range) or len(generation_range) == 0:
         raise ValueError("Invalid generation range.")
-    
+
     if any(g not in range(1, len(all_generations) + 1) for g in generation_range):
-        raise ValueError(f"Invalid generation in range. Available generations are {all_generations}.")
-    
+        raise ValueError(
+            f"Invalid generation in range. Available generations are {all_generations}."
+        )
+
     if as_generation_dict:
         generations = {}
         for generation in generation_range:
-            generations[generation] = _get_individuals_of_generation(run, generation, value)
+            generations[generation] = _get_individuals_of_generation(
+                run, generation, value
+            )
         return generations
-    
-    else: 
+
+    else:
         individuals = []
         for generation in generation_range:
             if value != "names":
-                individuals += list(_get_individuals_of_generation(run, generation, value).values())
+                individuals += list(
+                    _get_individuals_of_generation(run, generation, value).values()
+                )
             else:
                 individuals += _get_individuals_of_generation(run, generation, value)
 
         return individuals
-      
+
+
 def _get_minmax_result_by_key(results, key, min_boundary=None, max_boundary=None):
     """
     Finds the minimum and maximum values in a list of dictionaries based on a specified key,
@@ -365,12 +401,16 @@ def _get_minmax_result_by_key(results, key, min_boundary=None, max_boundary=None
     if not results:
         return None, None  # Return None for both min and max if the list is empty
 
-    min_val = float('inf')
-    max_val = float('-inf')
+    min_val = float("inf")
+    max_val = float("-inf")
 
     for result in results:
-        if result is not None and key in result and isinstance(result[key], (int, float)):
-            
+        if (
+            result is not None
+            and key in result
+            and isinstance(result[key], (int, float))
+        ):
+
             val = result[key]
 
             if min_boundary is not None:
@@ -381,8 +421,9 @@ def _get_minmax_result_by_key(results, key, min_boundary=None, max_boundary=None
 
             min_val = min(min_val, val)
             max_val = max(max_val, val)
-            
+
     return min_val, max_val
+
 
 def get_individuals_min_max(run, generation_range=None):
     """
@@ -407,29 +448,34 @@ def get_individuals_min_max(run, generation_range=None):
     if generation_range is not None and not isinstance(generation_range, tuple):
         raise TypeError("Invalid type for 'generation_range'. Must be a tuple.")
 
-    if generation_range is not None and (len(generation_range) != 2 or not all(isinstance(g, int) for g in generation_range)):
+    if generation_range is not None and (
+        len(generation_range) != 2
+        or not all(isinstance(g, int) for g in generation_range)
+    ):
         raise ValueError("Invalid 'generation_range'. Must be a tuple of two integers.")
 
     values = get_individuals(run, generation_range, "results", as_generation_dict=False)
-    
-    values, _ = get_healthy_individuals_results(run, generation_range, as_generation_dict=False)
+
+    values, _ = get_healthy_individuals_results(
+        run, generation_range, as_generation_dict=False
+    )
     meas_infos = get_meas_info(run)
     measurements = {}
 
     for measure, meas_info in meas_infos.items():
-        min_boundary = meas_info.get('min_boundary', None)
-        max_boundary = meas_info.get('max_boundary', None)
-        
+        min_boundary = meas_info.get("min_boundary", None)
+        max_boundary = meas_info.get("max_boundary", None)
+
         measurements[measure] = _get_minmax_result_by_key(
-            values,
-            measure,
-            min_boundary=min_boundary,
-            max_boundary=max_boundary
+            values, measure, min_boundary=min_boundary, max_boundary=max_boundary
         )
 
     return measurements
-  
-def get_healthy_individuals_results(run, generation_range=None, as_generation_dict=False): 
+
+
+def get_healthy_individuals_results(
+    run, generation_range=None, as_generation_dict=False
+):
     """
     Retrieve healthy and unhealthy individuals' results.
 
@@ -444,53 +490,59 @@ def get_healthy_individuals_results(run, generation_range=None, as_generation_di
         tuple or list: If as_generation_dict is True, returns a tuple containing dictionaries of healthy and unhealthy individuals' results.
                        If as_generation_dict is False, returns two lists of healthy and unhealthy individual results.
     """
-    gen_results = get_individuals(run, generation_range, value="results", as_generation_dict=True)   
+    gen_results = get_individuals(
+        run, generation_range, value="results", as_generation_dict=True
+    )
     measurements = list(get_meas_info(run).keys())
-    
+
     healthy = {}
     unhealthy = {}
-    
+
     for gen, results in gen_results.items():
-        
+
         healthy[gen] = {}
         unhealthy[gen] = {}
-        
+
         for ind, result in results.items():
-            
+
             ### LOGIC FOR INDIVIDUAL HEALTH ###
-            
-            if "error" not in result or result["error"] == "False" or result["error"] == False:
+
+            if (
+                "error" not in result
+                or result["error"] == "False"
+                or result["error"] == False
+            ):
                 healthy[gen][ind] = result
-                
-            #elif result["error"] == "True" or result["error"] == True:
+
+            # elif result["error"] == "True" or result["error"] == True:
             else:
                 unhealthy[gen][ind] = result
-            
+
             ###################################
-            
-            
+
     healthy_list = []
     for gen, results in healthy.items():
         healthy_list += list(results.values())
-                
+
     unhealthy_list = []
     for gen, results in unhealthy.items():
         unhealthy_list += list(results.values())
-            
+
     if as_generation_dict:
         return healthy, unhealthy
-        
-    else: 
+
+    else:
         healthy_list = []
         for gen, results in healthy.items():
             healthy_list += list(results.values())
-                
+
         unhealthy_list = []
         for gen, results in unhealthy.items():
             unhealthy_list += list(results.values())
-            
+
         return healthy_list, unhealthy_list
-   
+
+
 def get_best_individuals(run):
     """Get the individuals with the highest fitness value per generation.
 
@@ -500,37 +552,41 @@ def get_best_individuals(run):
     Returns:
         dict: Generation dictionnairy with dictionnairy of "individual", its "results" and "chromosome"
     """
-    
-    results = get_individuals(run, generation_range=None, value="results", as_generation_dict=True)
-    chromosomes = get_individuals(run, generation_range=None, value="chromosome", as_generation_dict=True)
-    
+
+    results = get_individuals(
+        run, generation_range=None, value="results", as_generation_dict=True
+    )
+    chromosomes = get_individuals(
+        run, generation_range=None, value="chromosome", as_generation_dict=True
+    )
+
     best_individuals = {}
-    
+
     for gen, individuals in results.items():
-        
+
         best_fitness = 0
         best_ind = None
         best_result = None
         best_chromosome = None
-        
+
         for ind, results in individuals.items():
-            
+
             # TODO Why None
             if results is not None:
                 ind_fitness = results["fitness"]
-            
+
                 if ind_fitness > best_fitness:
                     best_fitness = ind_fitness
                     best_ind = ind
                     best_result = results
                     best_chromosome = chromosomes[gen][ind]
-        
+
         best_individuals[gen] = {
             "individual": best_ind,
             "results": best_result,
             "chromosome": best_chromosome,
         }
-        
+
     return best_individuals
 
 
@@ -538,16 +594,21 @@ def get_best_individuals(run):
 def get_number_of_genes(run, generation, genename):
     """
     Get the number of genes in a certain generation.
-    
+
     Args:
         run (str): The path of the ENAS run results directory.
         generation (int): Generation where genes will be counted.
-        genename (str): The "layer" identifier of the a gene. 
-        
+        genename (str): The "layer" identifier of the a gene.
+
     Returns:
         count (int): Number of genes
     """
-    chromosomes = get_individuals(run, range(generation, generation+1), value="chromosome", as_generation_dict=False)
+    chromosomes = get_individuals(
+        run,
+        range(generation, generation + 1),
+        value="chromosome",
+        as_generation_dict=False,
+    )
 
     count = 0
     for chromosome in chromosomes:
@@ -560,7 +621,7 @@ def get_number_of_genes(run, generation, genename):
     return count
 
 
-### FAMILY TREE 
+### FAMILY TREE
 def _get_crossover_parents(run):
     """
     Retrieve information about crossover parents and their offspring.
@@ -577,9 +638,20 @@ def _get_crossover_parents(run):
               - 'parent2': The name of the second parent.
               - 'crossover2': The crossover point in the second parent's chromosome.
     """
-    df = pd.read_csv(f'{run}/crossover_parents.csv', header=None)
-    df = df.rename(columns={0:"Generation", 1:"Parent 1", 2:"Parent 2", 3:"New Individual"})
-    df = df.reindex(columns=["Generation", "New Individual", "Parent 1", "Crossover 1", "Parent 2", "Crossover 2"])
+    df = pd.read_csv(f"{run}/crossover_parents.csv", header=None)
+    df = df.rename(
+        columns={0: "Generation", 1: "Parent 1", 2: "Parent 2", 3: "New Individual"}
+    )
+    df = df.reindex(
+        columns=[
+            "Generation",
+            "New Individual",
+            "Parent 1",
+            "Crossover 1",
+            "Parent 2",
+            "Crossover 2",
+        ]
+    )
 
     crossover_dict = {}
 
@@ -587,8 +659,12 @@ def _get_crossover_parents(run):
         individual = row["New Individual"].replace("New_Individual: ", "")
 
         generation = int(row["Generation"].replace("Generation: ", ""))
-        parent1 = row["Parent 1"].replace("Parent_1: ", "").replace("(", "").replace(")", "")
-        parent2 = row["Parent 2"].replace("Parent_2: ", "").replace("(", "").replace(")", "")
+        parent1 = (
+            row["Parent 1"].replace("Parent_1: ", "").replace("(", "").replace(")", "")
+        )
+        parent2 = (
+            row["Parent 2"].replace("Parent_2: ", "").replace("(", "").replace(")", "")
+        )
 
         parent1, crossover1 = parent1.split(",")[0], parent1.split(",")[1]
         parent2, crossover2 = parent2.split(",")[0], parent2.split(",")[1]
@@ -596,37 +672,49 @@ def _get_crossover_parents(run):
         crossover_dict[individual] = {
             "generation": generation,
             "parent1": parent1,
-            "crossover1": crossover1, 
+            "crossover1": crossover1,
             "parent2": parent2,
-            "crossover2": crossover2, 
+            "crossover2": crossover2,
         }
 
     return crossover_dict
 
+
 def _get_crossover_parents_df(run):
     """
     Dataframe of parents of individuals (not in use)
-    
+
     Args:
         run (str): The path of the ENAS run results directory.
-        
+
     Returns:
         df (pandas.DataFrame): Dataframe with columns ["generation", "individual", "parent1", "crossover1", "parent2", "crossover2"]
     """
 
-    df = pd.read_csv(f'{run}/crossover_parents.csv', header=None)
-    df = df.rename(columns={0:"generation", 1:"parent1", 2:"parent2", 3:"individual"})
-    df = df.reindex(columns=["generation", "individual", "parent1", "crossover1", "parent2", "crossover2"])
+    df = pd.read_csv(f"{run}/crossover_parents.csv", header=None)
+    df = df.rename(
+        columns={0: "generation", 1: "parent1", 2: "parent2", 3: "individual"}
+    )
+    df = df.reindex(
+        columns=[
+            "generation",
+            "individual",
+            "parent1",
+            "crossover1",
+            "parent2",
+            "crossover2",
+        ]
+    )
 
     df["generation"] = df["generation"].str.replace("Generation: ", "")
     df["parent1"] = df["parent1"].str.replace("Parent_1: ", "")
     df["parent2"] = df["parent2"].str.replace("Parent_2: ", "")
     df["individual"] = df["individual"].str.replace("New_Individual: ", "")
 
-    df["generation"] = df["generation"].astype('int64')
+    df["generation"] = df["generation"].astype("int64")
 
     for idx, row in df.iterrows():
-       
+
         p1 = row["parent1"].replace("(", "").replace(")", "")
         p2 = row["parent2"].replace("(", "").replace(")", "")
 
@@ -635,104 +723,166 @@ def _get_crossover_parents_df(run):
         df.loc[idx, "parent2"] = p2.split(",")[0]
         df.loc[idx, "crossover2"] = p2.split(",")[1]
 
-    return df 
+    return df
+
 
 def _get_upstream_tree(run, generation, individual, generation_range):
     """
     Helper funnction for family tree: Create upstream famliy tree with nodes, edges and root elements starting from selected individual.
-    
+
     Args:
         run (str): The path of the ENAS run results directory.
         generation (int): Generation of individual
-        individual (str): Individual from where family tree evolves from. 
-        generation_range (range): A python range of generations from which the individuals will be extracted. 
-        
+        individual (str): Individual from where family tree evolves from.
+        generation_range (range): A python range of generations from which the individuals will be extracted.
+
     Returns:
         elements (list): List of nodes and edges for element param in cytoscape.
         root (list): List of roots nodes to create right tree structure.
     """
-    
+
     min_generation = generation_range[0]
 
     # End condition with only one individual
     if min_generation == generation:
-        return ([{'data': {'id': individual, 'label': individual[0:3], 'generation': generation, 'extinct': False}}], [individual])
+        return (
+            [
+                {
+                    "data": {
+                        "id": individual,
+                        "label": individual[0:3],
+                        "generation": generation,
+                        "extinct": False,
+                    }
+                }
+            ],
+            [individual],
+        )
 
     # Nodes and edges for individual
     crossovers = _get_crossover_parents(run)
-    
+
     parent1 = crossovers[individual]["parent1"]
     crossover1 = crossovers[individual]["crossover1"]
-    
+
     parent2 = crossovers[individual]["parent2"]
     crossover2 = crossovers[individual]["crossover2"]
 
     individual_el = [
-        {'data': {'id': individual, 'label': individual[0:3], 'generation': generation, 'extinct': False}},
-        {'data': {'source': parent1, 'target': individual, 'edgelabel': crossover1}},
-        {'data': {'source': parent2, 'target': individual, 'edgelabel': crossover2}}
+        {
+            "data": {
+                "id": individual,
+                "label": individual[0:3],
+                "generation": generation,
+                "extinct": False,
+            }
+        },
+        {"data": {"source": parent1, "target": individual, "edgelabel": crossover1}},
+        {"data": {"source": parent2, "target": individual, "edgelabel": crossover2}},
     ]
 
     # Recursion for moving up the tree
-    parent1_tree, roots1 = _get_upstream_tree(run, generation-1, parent1, generation_range)
-    parent2_tree, roots2 = _get_upstream_tree(run, generation-1, parent2, generation_range)
+    parent1_tree, roots1 = _get_upstream_tree(
+        run, generation - 1, parent1, generation_range
+    )
+    parent2_tree, roots2 = _get_upstream_tree(
+        run, generation - 1, parent2, generation_range
+    )
 
     return (parent1_tree + individual_el + parent2_tree, roots1 + roots2)
+
 
 def _get_downstream_tree(run, generation, individual, generation_range):
     """
     Helper funnction for family tree: Create upstream famliy tree with nodes and edges starting from selected individual.
-    
+
     Args:
         run (str): The path of the ENAS run results directory.
         generation (int): Generation of individual
-        individual (str): Individual from where family tree evolves from. 
-        generation_range (range): A python range of generations from which the individuals will be extracted. 
-        
+        individual (str): Individual from where family tree evolves from.
+        generation_range (range): A python range of generations from which the individuals will be extracted.
+
     Returns:
         elements (list): list of nodes and edges for element param in cytoscape.
     """
 
     max_generation = generation_range[-1]
-    
+
     # Get children of individual
     crossovers = _get_crossover_parents_df(run)
-    children = list(crossovers[crossovers['parent1'].str.contains(individual)]["individual"].values)
-    crossover = list(crossovers[crossovers['parent1'].str.contains(individual)]["crossover1"].values)
-    
-    children += list(crossovers[crossovers['parent2'].str.contains(individual)]["individual"].values)
-    crossover += list(crossovers[crossovers['parent2'].str.contains(individual)]["crossover2"].values)
-    
+    children = list(
+        crossovers[crossovers["parent1"].str.contains(individual)]["individual"].values
+    )
+    crossover = list(
+        crossovers[crossovers["parent1"].str.contains(individual)]["crossover1"].values
+    )
+
+    children += list(
+        crossovers[crossovers["parent2"].str.contains(individual)]["individual"].values
+    )
+    crossover += list(
+        crossovers[crossovers["parent2"].str.contains(individual)]["crossover2"].values
+    )
+
     extinct = False if children else True
 
     # End condition with only one individual
     if max_generation == generation:
-        return [{'data': {'id': individual, 'label': individual[0:3], 'generation': generation, 'extinct': extinct}}]
+        return [
+            {
+                "data": {
+                    "id": individual,
+                    "label": individual[0:3],
+                    "generation": generation,
+                    "extinct": extinct,
+                }
+            }
+        ]
 
     # Nodes and edges for individual
-    individual_el = [{'data': {'id': individual, 'label': individual[0:3], 'generation': generation, 'extinct': extinct}}]
+    individual_el = [
+        {
+            "data": {
+                "id": individual,
+                "label": individual[0:3],
+                "generation": generation,
+                "extinct": extinct,
+            }
+        }
+    ]
 
     for idx, child in enumerate(children):
-        individual_el.append({'data': {'source': individual, 'target': child, 'edgelabel': crossover[idx]}})
+        individual_el.append(
+            {
+                "data": {
+                    "source": individual,
+                    "target": child,
+                    "edgelabel": crossover[idx],
+                }
+            }
+        )
 
     # Recursion for moving down the tree
     children_tree = []
 
-    for child in children: 
-        children_tree += _get_downstream_tree(run, generation+1, child, generation_range)
+    for child in children:
+        children_tree += _get_downstream_tree(
+            run, generation + 1, child, generation_range
+        )
 
     return children_tree + individual_el
+
 
 def get_family_tree(run, generation, individual, generation_range=None):
     """
     Create famliy tree with nodes, edges and roots elements starting from selected individual.
-    
+
     Args:
         run (str): The path of the ENAS run results directory.
         generation (int): Generation of individual
-        individual (str): Individual from where family tree evolves from. 
-        generation_range (range): A python range of generations from which the individuals will be extracted. 
-        
+        individual (str): Individual from where family tree evolves from.
+        generation_range (range): A python range of generations from which the individuals will be extracted.
+
     Returns:
         elements (list): list of nodes and edges for element param in cytoscape.
         root (list): List of roots nodes to create right tree structure.
@@ -740,25 +890,31 @@ def get_family_tree(run, generation, individual, generation_range=None):
 
     # Set default value
     if generation_range is None:
-        generation_range = range(generation-2, generation+1)
+        generation_range = range(generation - 2, generation + 1)
 
     # Get the entire tree without duplicates
-    upstream_tree, roots = _get_upstream_tree(run, generation, individual, generation_range)
-    downstream_tree = _get_downstream_tree(run, generation, individual, generation_range)
+    upstream_tree, roots = _get_upstream_tree(
+        run, generation, individual, generation_range
+    )
+    downstream_tree = _get_downstream_tree(
+        run, generation, individual, generation_range
+    )
 
     family_tree = []
     unique_roots = []
 
     for el in downstream_tree + upstream_tree:
-        if el not in family_tree: family_tree.append(el)
+        if el not in family_tree:
+            family_tree.append(el)
 
     for el in roots:
-        if el not in unique_roots: unique_roots.append(el)
-    
+        if el not in unique_roots:
+            unique_roots.append(el)
+
     return (family_tree, unique_roots)
 
 
-### OTHER HELPER FUNCTIONS 
+### OTHER HELPER FUNCTIONS
 def get_random_individual(run, generation=None):
     """
     Get a random individual from a specified generation or from all generations if no generation is specified.
@@ -774,7 +930,9 @@ def get_random_individual(run, generation=None):
         generations = get_generations(run)
         generation = random.choice(generations)
         generation = int(generation.split("_")[1])
-    
-    individuals = get_individuals(run, range(generation, generation+1), value="names", as_generation_dict=False)
-    
+
+    individuals = get_individuals(
+        run, range(generation, generation + 1), value="names", as_generation_dict=False
+    )
+
     return generation, individuals[0]

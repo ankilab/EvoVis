@@ -7,9 +7,9 @@ import numpy as np
 
 # MODULE SEARCH SPACE
 
-# The Search Space Module provides functionalities for defining, managing, and exploring 
+# The Search Space Module provides functionalities for defining, managing, and exploring
 # search spaces in the context of evolutionary neural network architectures.
-# It offers tools to represent the possible configurations, constraints, and relationships 
+# It offers tools to represent the possible configurations, constraints, and relationships
 # between components within a predefined solution space.
 
 ###########################################################################################
@@ -34,13 +34,14 @@ def _json_to_dict(filepath):
     >>> data = _json_to_dict('example.json')
     """
     try:
-        with open(filepath, 'r') as file:
+        with open(filepath, "r") as file:
             data = json.load(file)
         return data
     except FileNotFoundError:
         raise FileNotFoundError(f"File not found: {filepath}")
     except json.JSONDecodeError as e:
         raise json.JSONDecodeError(f"Error decoding JSON data in file {filepath}: {e}")
+
 
 def _get_search_space(run):
     """
@@ -61,26 +62,28 @@ def _get_search_space(run):
     """
     return _json_to_dict(f"{run}/search_space.json")
 
+
 def _get_groups(run):
     """
     Extract layer identifiers from the 'gene_pool' section of the search space.
 
     Args:
         run (str): The path of the ENAS run results directory.
-        
+
     Returns:
         dict: A dictionary mapping group types to lists of layer identifiers.
     """
     search_space = _get_search_space(run)
-    
+
     layer_dict = {}
-    
+
     for key, values in search_space.get("gene_pool", []).items():
-        
-        layer_identifiers = [val['layer'] for val in values]
+
+        layer_identifiers = [val["layer"] for val in values]
         layer_dict[key] = layer_identifiers
-        
+
     return layer_dict
+
 
 def _get_genes_flattened(run):
     """
@@ -92,34 +95,34 @@ def _get_genes_flattened(run):
     Returns:
         list: A list of dictionaries representing flattened genes with group information.
     """
-    
+
     search_space = _get_search_space(run)
     groups = search_space.get("gene_pool", [])
-    
+
     layers = []
-    
+
     for group, group_layers in groups.items():
-        
+
         for layer in group_layers:
             layer_with_group = layer.copy()
-            layer_with_group['group'] = group
+            layer_with_group["group"] = group
             layers.append(layer_with_group)
-            
+
     return layers
-  
-    
-### GRAPH CREATED FROM RULESETS ###         
+
+
+### GRAPH CREATED FROM RULESETS ###
 def _get_layer_graph(run, group_connections=True):
     """
     Retrieves the layer graph based on the search space defined for a given run.
 
     Args:
         run (str): The path of the ENAS run results directory.
-        group_connections (bool, optional): If True, includes group connections in the graph. 
+        group_connections (bool, optional): If True, includes group connections in the graph.
             Defaults to True.
 
     Returns:
-        dict: A dictionary representing the layer graph. Keys are source layers, 
+        dict: A dictionary representing the layer graph. Keys are source layers,
               and values are lists of target layers connected to the source layer.
 
     Raises:
@@ -139,18 +142,18 @@ def _get_layer_graph(run, group_connections=True):
 
         # Process layers connections
         for src_layer in search_space.get("rule_set", []):
-                     
-                # Identify target layers
-                target_layers = search_space["rule_set"].get(src_layer).get("rule", [])
-                graph[src_layer] = target_layers
-        
+
+            # Identify target layers
+            target_layers = search_space["rule_set"].get(src_layer).get("rule", [])
+            graph[src_layer] = target_layers
+
         # Return graph without group connections
         if not group_connections:
-            return graph       
+            return graph
 
         # Process group connections
         for group_rule in search_space.get("rule_set_group", []):
-            
+
             # Identify source and target group
             for target_group in group_rule.get("rule", []):
                 source_groups = group_rule.get("group", [])
@@ -165,7 +168,7 @@ def _get_layer_graph(run, group_connections=True):
                         graph[src_layer] += target_layers
                     else:
                         graph[src_layer] = target_layers
-        
+
         return graph
 
     except KeyError as key_error:
@@ -173,6 +176,7 @@ def _get_layer_graph(run, group_connections=True):
 
     except TypeError as type_error:
         raise TypeError(f"Unexpected data structure in search space data: {type_error}")
+
 
 def _get_group_graph(run):
     """
@@ -182,7 +186,7 @@ def _get_group_graph(run):
         run (str): The path of the ENAS run results directory.
 
     Returns:
-        dict: A dictionary representing the group graph. Keys are source groups, 
+        dict: A dictionary representing the group graph. Keys are source groups,
               and values are lists of target groups connected to the source group.
 
     Raises:
@@ -217,9 +221,9 @@ def _get_group_graph(run):
 
     except TypeError as type_error:
         raise TypeError(f"Unexpected data structure in search space data: {type_error}")
- 
- 
-### CONNECTED LAYERS ### 
+
+
+### CONNECTED LAYERS ###
 def _dfs(graph, layer, visited, result):
     """
     Perform depth-first search (_DFS) on the given graph starting from the specified layer.
@@ -248,6 +252,7 @@ def _dfs(graph, layer, visited, result):
         for neighbor in graph.get(layer, []):
             _dfs(graph, neighbor, visited, result)
 
+
 def _get_connected_layers(run, start_layer="Start"):
     """
     Retrieve layers connected to the specified starting layer in the layer graph for a given run.
@@ -269,13 +274,15 @@ def _get_connected_layers(run, start_layer="Start"):
     try:
         graph = _get_layer_graph(run, group_connections=True)
         if start_layer not in graph:
-            raise ValueError(f"The specified start_layer '{start_layer}' is not found in the layer graph.")
+            raise ValueError(
+                f"The specified start_layer '{start_layer}' is not found in the layer graph."
+            )
 
         visited = set()
         result = []
 
         _dfs(graph, start_layer, visited, result)
-        
+
         return result
 
     except KeyError as key_error:
@@ -316,13 +323,14 @@ def _get_node_element(gene):
 
     return node
 
+
 def get_genepool(run):
     """
     Create Cytoscape elements representing layers and group connections in the search space for a given run.
 
     Args:
         run (str): The path of the ENAS run results directory.
-        
+
     Returns:
         tuple: A tuple containing a list of Cytoscape elements and a list of unique group names.
 
@@ -340,7 +348,16 @@ def get_genepool(run):
     """
     try:
         # Initialize elements with a start node
-        elements = [{'data': {'id': 'Start', 'label': 'Start', 'f_name': 'Start', 'layer': 'Start'}}]
+        elements = [
+            {
+                "data": {
+                    "id": "Start",
+                    "label": "Start",
+                    "f_name": "Start",
+                    "layer": "Start",
+                }
+            }
+        ]
         group_elements = []
         groups = []
 
@@ -354,7 +371,7 @@ def get_genepool(run):
             excluded = gene.get("exclude", False)
 
             if not excluded and layer in connected_layers:
-                
+
                 # Add layer node
                 layer_data = _get_node_element(gene)
                 element = {"data": layer_data}
@@ -365,7 +382,7 @@ def get_genepool(run):
                 # Add group node
                 group = gene.get("group")
                 if group:
-                    group_data = {'id': group, 'label': group}
+                    group_data = {"id": group, "label": group}
                     element = {"data": group_data}
 
                     if element not in elements:
@@ -380,7 +397,10 @@ def get_genepool(run):
 
         for layer, edges in layer_graph.items():
             for edge in edges:
-                element = {'data': {'source': layer, 'target': edge}, 'classes': f'{layer} {edge}'}
+                element = {
+                    "data": {"source": layer, "target": edge},
+                    "classes": f"{layer} {edge}",
+                }
 
                 if element not in elements and layer in connected_layers:
                     elements.append(element)
@@ -390,7 +410,10 @@ def get_genepool(run):
 
         for group_source, group_targets in group_graph.items():
             for group_target in group_targets:
-                element = {'data': {'source': group_source, 'target': group_target}, 'classes': 'class-connect'}
+                element = {
+                    "data": {"source": group_source, "target": group_target},
+                    "classes": "class-connect",
+                }
 
                 if element not in elements and group_source in groups:
                     elements.append(element)
@@ -402,7 +425,7 @@ def get_genepool(run):
 
     except TypeError as type_error:
         raise TypeError(f"Unexpected data structure in search space data: {type_error}")
-    
+
 
 ### UNIQUE GENES WITH COLORS ###
 def _generate_color_scale(start_color, end_color, num_colors):
@@ -427,6 +450,7 @@ def _generate_color_scale(start_color, end_color, num_colors):
     color_scale = [rgb2hex((r[i], g[i], b[i])) for i in range(num_colors)]
     return color_scale
 
+
 def get_unique_gene_colors(run):
     """
     Get unique colors for each gene layer in a run.
@@ -439,17 +463,17 @@ def get_unique_gene_colors(run):
     """
     connected_genes = _get_connected_layers(run)
     unique_genes = {connected_gene: "" for connected_gene in connected_genes}
-    
+
     opacity_step = 1 / len(unique_genes)
-    
-    start_color = '#6173E9'
-    end_color = '#B70202'
-    
+
+    start_color = "#6173E9"
+    end_color = "#B70202"
+
     num_colors = len(unique_genes)
     color_scale = _generate_color_scale(start_color, end_color, num_colors)
 
     for idx, gene in enumerate(unique_genes):
-        
+
         opacity = 1 - idx * opacity_step
         unique_genes[gene] = color_scale[idx]
 
