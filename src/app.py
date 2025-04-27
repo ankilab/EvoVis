@@ -24,13 +24,13 @@ def navbar():
     """
     # Header descriptions and configurations
     nav_items = [
-        {"desc": "Hyperparameter Overview", "icon": "streamline:input-box-solid", "id": "hyperparameter-link", 
+        {"desc": "Parameters Overview", "icon": "streamline:input-box-solid", "id": "hyperparameter-link", 
          "path": dash.page_registry['pages.hyperparameters_page']['relative_path']},
         {"desc": "Gene Pool", "icon": "jam:dna", "id": "genepool-link", 
          "path": dash.page_registry['pages.genepool_page']['relative_path']},
         {"desc": "Family Tree", "icon": "mdi:graph", "id": "family-tree-link", 
          "path": dash.page_registry['pages.family_tree_page']['relative_path']},
-        {"desc": "Run Results", "icon": "entypo:bar-graph", "id": "results-link", 
+        {"desc": "Run Result Plots", "icon": "entypo:bar-graph", "id": "results-link", 
          "path": dash.page_registry['pages.run_results_page']['relative_path']}
     ]
     
@@ -99,4 +99,9 @@ app = dash.Dash(__name__, use_pages=True)
 app.layout = app_layout
 
 if __name__ == "__main__":
-    app.run_server(host="0.0.0.0", port="8050", debug=True)
+    try:
+        # Try newer method first
+        app.run(host="0.0.0.0", port=8050, debug=True)
+    except AttributeError:
+        # Fall back to the older method 
+        app.run_server(host="0.0.0.0", port=8050, debug=True)
