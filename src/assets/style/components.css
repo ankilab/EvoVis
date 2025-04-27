@@ -1,7 +1,4 @@
 /* METRIC BUTTONS */
-.metric-btn:hover {
-    background-color: var(--accent-color);
-}
 
 .metric-btn {
     height: 50px;

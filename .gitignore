@@ -3,3 +3,4 @@ data
 src/archive
 *pycache*
 *.DC_Store*
+venv/
