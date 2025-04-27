@@ -119,7 +119,7 @@ def parameter_card(metrictype, metric, icon=None, unit=None, description=None, m
         offset=5,
         radius=15,
         transition="pop-top-left",
-        color="#6173E9",
+        color="#262626",
         multiline=True,
         width=280,
         children=[button]
@@ -426,7 +426,7 @@ def chromosome_sequence(chromosome, justify="flex-start", align="flex-start", co
             position="right",
             offset=3,
             transition="slide-up",
-            color='gray',
+            color="#262626",
             multiline=True,
             children=[dmc.Badge(gene_name, variant='light', color='indigo', style={'flex': '100%', 'background-color': f"{color}33", 'color': color})]
         )
