@@ -40,7 +40,9 @@ def _json_to_dict(filepath):
     except FileNotFoundError:
         raise FileNotFoundError(f"File not found: {filepath}")
     except json.JSONDecodeError as e:
-        raise json.JSONDecodeError(f"Error decoding JSON data in file {filepath}: {e}")
+        raise json.JSONDecodeError(
+            f"Error decoding JSON data in file {filepath}: {str(e)}", e.doc, e.pos
+        )
 
 
 def _get_search_space(run):

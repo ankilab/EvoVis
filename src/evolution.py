@@ -43,7 +43,9 @@ def _json_to_dict(filepath):
     except FileNotFoundError:
         raise FileNotFoundError(f"File not found: {filepath}")
     except json.JSONDecodeError as e:
-        raise json.JSONDecodeError(f"Error decoding JSON data in file {filepath}: {e}")
+        raise json.JSONDecodeError(
+            f"Error decoding JSON data in file {filepath}: {str(e)}", e.doc, e.pos
+        )
 
 
 ### RUN INFORMATION ###
@@ -118,15 +120,6 @@ def get_generations(run, as_int=False):
     Raises:
         FileNotFoundError: If the specified run directory does not exist.
         ValueError: If 'as_int' is not a boolean.
-
-    Example:
-        >>> generation_names = get_generations('my_run')
-        >>> print(generation_names)
-        ['Generation_1', 'Generation_2', ...]
-
-        >>> generation_numbers = get_generations('my_run', as_int=True)
-        >>> print(generation_numbers)
-        [1, 2, ...]
     """
     # Validate input values
     if not os.path.exists(run):
@@ -147,15 +140,20 @@ def get_generations(run, as_int=False):
 
     # Check last generation finished processed
     take_last_gen = True
-    results_last_gen = _get_individuals_of_generation(
-        run, generations_int[-1], "results"
-    )
 
-    for result in results_last_gen.values():
-        if result.get("fitness", None) is None:
-            take_last_gen = False
+    # Only check for fitness if we have at least one generation
+    if generations_int:
+        results_last_gen = _get_individuals_of_generation(
+            run, generations_int[-1], "results"
+        )
 
-    if not take_last_gen:
+        # Determine if latest generation completed computations by checking if fitness computed
+        for result in results_last_gen.values():
+            if result is None or result.get("fitness", None) is None:
+                take_last_gen = False
+                break
+
+    if not take_last_gen and generations_int:
         generations_int = generations_int[0 : len(generations_int) - 1]
 
     if not as_int:
