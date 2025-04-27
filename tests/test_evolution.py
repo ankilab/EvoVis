@@ -17,6 +17,7 @@ from src.evolution import (
 
 @pytest.fixture
 def mock_config_data():
+    """Fixture providing mock configuration data with hyperparameters and result definitions."""
     return {
         "hyperparameters": {"population_size": 10, "mutation_rate": 0.1},
         "results": {
@@ -33,11 +34,13 @@ def mock_config_data():
 
 @pytest.fixture
 def mock_results_data():
+    """Fixture providing mock result data for an individual."""
     return {"accuracy": 85.5, "loss": 0.12, "fitness": 0.75}
 
 
 @pytest.fixture
 def mock_chromosome_data():
+    """Fixture providing mock chromosome data with layer definitions."""
     return [
         {"layer": "STFT_2D", "group": "Feature Extraction 2D"},
         {"layer": "MAG_2D", "group": "Feature Extraction 2D"},
@@ -46,6 +49,7 @@ def mock_chromosome_data():
 
 @pytest.fixture
 def mock_directory_structure():
+    """Fixture mocking a directory structure with generation folders."""
     directories = ["Generation_1", "Generation_2", "Generation_3"]
 
     with patch("os.path.exists", return_value=True), patch(
@@ -54,8 +58,8 @@ def mock_directory_structure():
         yield directories
 
 
-# Tests for _json_to_dict
 def test_json_to_dict_success():
+    """Test that _json_to_dict correctly parses valid JSON files."""
     mock_data = '{"key": "value"}'
     with patch("builtins.open", mock_open(read_data=mock_data)):
         result = _json_to_dict("dummy_path.json")
@@ -63,20 +67,22 @@ def test_json_to_dict_success():
 
 
 def test_json_to_dict_file_not_found():
+    """Test that _json_to_dict raises FileNotFoundError when file doesn't exist."""
     with patch("builtins.open", side_effect=FileNotFoundError):
         with pytest.raises(FileNotFoundError):
             _json_to_dict("non_existent_file.json")
 
 
 def test_json_to_dict_invalid_json():
+    """Test that _json_to_dict raises JSONDecodeError for invalid JSON."""
     mock_data = "{invalid json}"
     with patch("builtins.open", mock_open(read_data=mock_data)):
         with pytest.raises(json.JSONDecodeError):
             _json_to_dict("invalid_json.json")
 
 
-# Tests for get_generations
 def test_get_generations(mock_directory_structure):
+    """Test that get_generations returns generation directory names."""
     with patch("src.evolution._get_individuals_of_generation") as mock_get_individuals:
         mock_get_individuals.return_value = {"individual_1": {"fitness": 0.8}}
 
@@ -86,6 +92,7 @@ def test_get_generations(mock_directory_structure):
 
 
 def test_get_generations_as_int(mock_directory_structure):
+    """Test that get_generations returns generation numbers when as_int=True."""
     with patch("src.evolution._get_individuals_of_generation") as mock_get_individuals:
         mock_get_individuals.return_value = {"individual_1": {"fitness": 0.5}}
 
@@ -94,14 +101,15 @@ def test_get_generations_as_int(mock_directory_structure):
             assert result == [1, 2, 3]
 
 
-# Tests for get_hyperparameters and get_meas_info
 def test_get_hyperparameters(mock_config_data):
+    """Test that get_hyperparameters extracts hyperparameters from configuration."""
     with patch("src.evolution._get_configurations", return_value=mock_config_data):
         result = get_hyperparameters("test_run")
         assert result == {"population_size": 10, "mutation_rate": 0.1}
 
 
 def test_get_meas_info(mock_config_data):
+    """Test that get_meas_info extracts measurement information with default values."""
     with patch("src.evolution._get_configurations", return_value=mock_config_data):
         result = get_meas_info("test_run")
 
@@ -117,8 +125,8 @@ def test_get_meas_info(mock_config_data):
         assert result["loss"]["run-result-plot"] == True
 
 
-# Tests for individual result and chromosome
 def test_get_individual_result(mock_results_data):
+    """Test that get_individual_result retrieves result data for a specific individual."""
     with patch("os.path.isfile", return_value=True), patch(
         "src.evolution._json_to_dict", return_value=mock_results_data
     ):
@@ -129,6 +137,7 @@ def test_get_individual_result(mock_results_data):
 
 
 def test_get_individual_result_nested_values():
+    """Test that get_individual_result calculates averages for nested numerical values."""
     nested_data = {"accuracy": {"fold1": 80, "fold2": 90}}
 
     with patch("os.path.isfile", return_value=True), patch(
@@ -140,6 +149,7 @@ def test_get_individual_result_nested_values():
 
 
 def test_get_individual_chromosome(mock_chromosome_data):
+    """Test that get_individual_chromosome retrieves chromosome data for a specific individual."""
     with patch("os.path.isfile", return_value=True), patch(
         "src.evolution._json_to_dict", return_value=mock_chromosome_data
     ):
@@ -149,8 +159,8 @@ def test_get_individual_chromosome(mock_chromosome_data):
         assert result[1]["layer"] == "MAG_2D"
 
 
-# Tests for get_individuals
 def test_get_individuals_names():
+    """Test that get_individuals retrieves individual names across generations."""
     with patch(
         "src.evolution.get_generations", return_value=["Generation_1", "Generation_2"]
     ), patch("src.evolution._get_individuals_of_generation") as mock_get_individuals:
@@ -169,6 +179,7 @@ def test_get_individuals_names():
 
 
 def test_get_individuals_as_generation_dict():
+    """Test that get_individuals returns results organized by generation when as_generation_dict=True."""
     with patch(
         "src.evolution.get_generations", return_value=["Generation_1", "Generation_2"]
     ), patch("src.evolution._get_individuals_of_generation") as mock_get_individuals:
@@ -187,8 +198,8 @@ def test_get_individuals_as_generation_dict():
         }
 
 
-# Tests for get_healthy_individuals_results
 def test_get_healthy_individuals_results():
+    """Test that get_healthy_individuals_results separates healthy and unhealthy individuals."""
     with patch("src.evolution.get_individuals") as mock_get_individuals, patch(
         "src.evolution.get_meas_info"
     ) as mock_get_meas_info:
@@ -211,8 +222,8 @@ def test_get_healthy_individuals_results():
         assert "unhealthy_ind" in unhealthy[1]
 
 
-# Tests for get_best_individuals
 def test_get_best_individuals():
+    """Test that get_best_individuals identifies and returns the best individual from each generation."""
     with patch("src.evolution.get_individuals") as mock_get_individuals:
 
         mock_get_individuals.side_effect = [
