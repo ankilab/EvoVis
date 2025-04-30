@@ -112,7 +112,7 @@ def family_tree_cytsocape():
                     stylesheet=CYTOSCAPE_STYLE,
                 ),
                 id="family-tree-loading",
-                #loaderProps={"color": "#262626", "size": "xl", "variant": "dots"},
+                loaderProps={"color": "#262626", "size": "xl", "variant": "dots"},
                 overlayOpacity=0,  # Transparent background
                 overlayColor="transparent",  # Transparent color
                 overlayBlur=2,  # Add blur effect (values typically range from 1-5)
@@ -227,7 +227,7 @@ def show_loading_indicator(gen_range, ind):
     Returns:
         component: Loading spinner component to show
     """
-    return dmc.Loader(color="#6173E9", size="xl", variant="dots")
+    return dmc.Loader(color="#262626", size="xl", variant="dots")
 
 
 @callback(
