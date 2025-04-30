@@ -331,8 +331,6 @@ def validate_individual_chromosome(run, generation, individual):
 
     filepath = f"{run}/Generation_{generation}/{individual}/chromosome.json"
 
-    print(filepath)
-
     # Check if config.json exists
     if not os.path.exists(filepath):
         return f"Error chromosome.json file for {individual} in {generation}: Chromosome file 'chromosome.json' not found."

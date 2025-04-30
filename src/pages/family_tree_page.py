@@ -1,5 +1,5 @@
 import dash
-from dash import html, callback, Input, Output, dcc
+from dash import html, callback, Input, Output, State, dcc
 import dash_cytoscape as cyto
 import dash_mantine_components as dmc
 from dash_iconify import DashIconify
@@ -97,15 +97,28 @@ MARKS_STYLE = {
 def family_tree_cytsocape():
     """
     Generates a Dash Cytoscape component representing the family tree.
+    Wrapped in a LoadingOverlay component.
 
     Returns:
-        dash_cytoscape.Cytoscape: Dash Cytoscape component representing the family tree.
+        dash_mantine_components.LoadingOverlay: Dash Mantine LoadingOverlay component wrapping the Cytoscape component.
     """
-    return cyto.Cytoscape(
-        id="cytoscape-family-tree",
-        className="wrapper",
-        style={"height": "450px", "max-width": "100%"},
-        stylesheet=CYTOSCAPE_STYLE,
+    return html.Div(
+        [
+            dmc.LoadingOverlay(
+                cyto.Cytoscape(
+                    id="cytoscape-family-tree",
+                    className="wrapper",
+                    style={"height": "430px", "max-width": "100%"},
+                    stylesheet=CYTOSCAPE_STYLE,
+                ),
+                id="family-tree-loading",
+                #loaderProps={"color": "#262626", "size": "xl", "variant": "dots"},
+                overlayOpacity=0,  # Transparent background
+                overlayColor="transparent",  # Transparent color
+                overlayBlur=2,  # Add blur effect (values typically range from 1-5)
+            )
+        ],
+        id="cytoscape-container"
     )
 
 
@@ -121,25 +134,28 @@ def generation_slider():
         run, generations_int[round(len(generations_int) / 3)]
     )
 
-    return dcc.RangeSlider(
-        min(generations_int),
-        max(generations_int),
-        1,
-        marks={
-            min(generations_int): {
-                "label": f"Generation_{min(generations_int)}",
-                "style": MARKS_STYLE,
+    return html.Div(
+        dcc.RangeSlider(
+            min(generations_int),
+            max(generations_int),
+            1,
+            marks={
+                min(generations_int): {
+                    "label": f"Generation_{min(generations_int)}",
+                    "style": MARKS_STYLE,
+                },
+                max(generations_int): {
+                    "label": f"Generation_{max(generations_int)}",
+                    "style": MARKS_STYLE,
+                },
             },
-            max(generations_int): {
-                "label": f"Generation_{max(generations_int)}",
-                "style": MARKS_STYLE,
-            },
-        },
-        # pushable=1,
-        allowCross=False,
-        id="gen-range-slider",
-        tooltip={"placement": "top", "always_visible": True},
-        value=[random_generation - 4, random_generation, random_generation + 1],
+            # pushable=1,
+            allowCross=False,
+            id="gen-range-slider",
+            tooltip={"placement": "top", "always_visible": True},
+            value=[random_generation - 4, random_generation, random_generation + 1],
+        ),
+        style={"margin-top": "12px"}  # Add padding/margin at the top of the slider so not blurred by family tree laoding
     )
 
 
@@ -195,17 +211,40 @@ def set_individuals_select(gen_range):
 
 
 @callback(
-    Output("cytoscape-family-tree", "elements"),
-    Output("cytoscape-family-tree", "layout"),
-    Output("cytoscape-family-tree", "stylesheet"),
-    Input("gen-range-slider", "value"),
-    Input("ind-select", "value"),
-    Input("cytoscape-family-tree", "tapNodeData"),
-    Input("cytoscape-family-tree", "tapEdgeData"),
+    Output("family-tree-loading", "loader"),
+    [Input("gen-range-slider", "value"), 
+     Input("ind-select", "value")],
+)
+def show_loading_indicator(gen_range, ind):
+    """
+    Shows the loading indicator when input values change.
+    In dash_mantine_components 0.12.0, we toggle the loader prop to show/hide loading.
+    
+    Args:
+        gen_range (list): Selected generation range.
+        ind (str): Selected individual.
+        
+    Returns:
+        component: Loading spinner component to show
+    """
+    return dmc.Loader(color="#6173E9", size="xl", variant="dots")
+
+
+@callback(
+    Output("family-tree-loading", "loader", allow_duplicate=True),
+    [Output("cytoscape-family-tree", "elements"),
+     Output("cytoscape-family-tree", "layout"),
+     Output("cytoscape-family-tree", "stylesheet")],
+    [Input("gen-range-slider", "value"),
+     Input("ind-select", "value"),
+     Input("cytoscape-family-tree", "tapNodeData"),
+     Input("cytoscape-family-tree", "tapEdgeData")],
+    prevent_initial_call=True,
 )
 def set_cytoscape(gen_range, ind, ind_clicked, edge_clicked):
     """
     Sets the elements, layout, and stylesheet for the family tree visualization based on user interactions.
+    Also hides the loading overlay when finished.
 
     Args:
         gen_range (list): List containing the selected generation (idx 1) and minimum (idx 0), maximum (idx 2) generation values selected on the RangeSlider.
@@ -214,11 +253,11 @@ def set_cytoscape(gen_range, ind, ind_clicked, edge_clicked):
         edge_clicked (dict): Data of the edge clicked on the Cytoscape component.
 
     Returns:
+        None: To hide the loader
         list: Nodes and edges of Cytoscape component.
         dict: Layout configuration for the Cytoscape component.
         list: Stylesheet for the Cytoscape component.
     """
-
     # Get Family tree through individual selection
     generation_range = range(gen_range[0], gen_range[2] + 1)
     gen = gen_range[1]
@@ -291,7 +330,8 @@ def set_cytoscape(gen_range, ind, ind_clicked, edge_clicked):
             }
         )
 
-    return elements, cytoscape_layout, new_cytoscape_style
+    # Set loading overlay to None to hide it
+    return None, elements, cytoscape_layout, new_cytoscape_style
 
 
 @callback(
