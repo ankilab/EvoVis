@@ -81,3 +81,5 @@ We present EvoVis, a novel dashboard for visualizing hyperparameters, gene pools
 # Acknowledgments
 
 We would like to thank Mateo Avila Pava and Stefan Dendorfer for their valuable feedback during the development phase of EvoVis. We receive funding from the Bavarian State Ministry of Science and the Arts (StMWK) and Fonds de recherche du Québec (FRQ) under the Collaborative Bilateral Research Program Bavaria – Québec managed by WKS at Bavarian Research Alliance (BayFOR) and Fonds de recherche du Québec – Santé (FRQS). The presented content is solely the responsibility of the authors and does not necessarily represent the official views of the above funding agencies.  
+
+# References
