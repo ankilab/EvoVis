@@ -1,0 +1,25 @@
+cff-version: 1.1.0
+message: "If you use this software, please cite it as below."
+title: "EvoVis: Dashboard for Visualizing Evolutionary Neural Architecture Search Algorithms"
+version: "v1.0.0"
+date-released: 2024-11-12
+keywords:
+  - Python
+  - Evolutionary neural architecture search algorithm
+  - Neural architecture search algorithm
+  - Optimization algorithm
+  - Deep learning
+authors:
+  - family-names: Dang
+    given-names: Lea
+    orcid: https://orcid.org/0009-0005-6056-0725
+    affiliation: Friedrich-Alexander-Universität Erlangen-Nürnberg, Germany
+  - family-names: Groh
+    given-names: René
+    orcid: https://orcid.org/0000-0002-3405-1311
+    affiliation: Friedrich-Alexander-Universität Erlangen-Nürnberg, Germany
+  - family-names: Kist
+    given-names: Andreas M.
+    orcid: https://orcid.org/0000-0003-3643-7776
+    affiliation: Friedrich-Alexander-Universität Erlangen-Nürnberg, Germany
+repository-code: https://github.com/ankilab/EvoVis
