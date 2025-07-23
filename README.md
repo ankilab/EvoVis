@@ -1,3 +1,5 @@
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.07728/status.svg)](https://doi.org/10.21105/joss.07728)
+
 # EvoVis
 
 EvoVis is a dashboard for visualizing Evolutionary Neural Architecture Search (ENAS) algorithms. ENAS is an optimization process that mimics biological evolution to automatically discover optimal neural network architectures for specific tasks. It starts with a population of randomly generated architectures and iteratively improving them through selection, crossover, and mutation. 
